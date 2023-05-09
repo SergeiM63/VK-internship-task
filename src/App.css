@@ -1,3 +1,8 @@
+body {
+  min-width: 320px;
+  background: rgba(0, 0, 0, .05); 
+}
+
 .App {
   max-width: 1200px;
   width: 100%;
@@ -19,12 +24,67 @@
   box-shadow: 0px 20px 50px rgba(60, 155, 230, .1);
 }
 
-.form__input-error {
-  border-color: red;
+.Form__select {
+  position: relative;
+  width: 45%;
+  margin-bottom: 20px;
 }
 
-.form__text-error {
+.Form__textarea {
+  width: 45%;
+  margin-bottom: 20px;
+  padding: 10px;
+  resize: none;
+}
+
+.Form__text-error {
   position: absolute;
   bottom: -15px;
   color: red;
+}
+
+.Form__btn-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.Form__btn-submit,
+.Form__btn-reset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45%;
+  border-radius: 8px;
+  border-color: transparent;
+  margin-bottom: 70px;
+  padding: 10px 50px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 22px;
+  background: rgb(60, 155, 230);
+  transition: background .3s ease-in-out;
+  cursor: pointer;
+}
+
+.Form__btn-submit:hover,
+.Form__btn-reset:hover {
+  background: rgb(60, 200, 220);
+}
+
+.Form__btn-submit:disabled {
+  color: #cdcdcd;
+  background: #ababab;
+}
+
+@media screen and (max-width: 586px) {
+  .Form {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .Form__select,
+  .Form__textarea {
+    width: 60%;
+  }
 }

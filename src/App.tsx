@@ -1,41 +1,69 @@
 import './App.css';
-import { useState } from 'react';
 import Select from 'react-select';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller  } from "react-hook-form";
 
-const options = [
+// Башни А и Б
+const towers = [
   { value: 'Башня А', label: 'Башня А' },
   { value: 'Башня Б', label: 'Башня Б' },
 ];
 
-//Удаление пробелов из поля ввода
-const deleteSpaces = (value: string) => {
-  return value.replace(/\s/g, '');
-};
+// Получаем массив этажей с 3 по 27
+const firstLevel = 3;
+const lastLevel = 28;
 
-//Удаление пробелов и цифр из поля ввода
-const deleteSpacesAndFigures = (value: string) => {
-  return value.replace(/\s/g, '').replace(/\d/g, '');
-};
+const levels = Array.from(Array(lastLevel).keys()).slice(firstLevel).map(level => {
+  return {
+    value: level.toString(),
+    label: level.toString()
+  }
+});
+
+// Получаем массив комнат с 1 по 10
+const firstRoom = 1;
+const lastRoom = 11;
+
+const rooms = Array.from(Array(lastRoom).keys()).slice(firstRoom).map(level => {
+  return {
+    value: level.toString(),
+    label: level.toString()
+  }
+});
+
+type optionsType = {
+  value: string, label: string
+}
 
 type FormValues = {
-  firstName: string;
-  lastName: string;
+  currentTower: string,
+  currentLevel: string,
+  currentRoom: string,
+  comments: string,
+  value: string,
 };
 
 export default function App() {
-  const [selectedOption, setSelectedOption] = useState(null);
-
   const {
-    register,
+    control,
     handleSubmit,
-    reset, 
-    formState: {errors, isValid}
+    reset,
+    formState: {isValid}
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    console.log(JSON.stringify(data));
+  const getValue = (value:string, options: optionsType[]) => {
+    return value ? options.find(option => option.value === value) : '';
+  };
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data); 
+    
+    // console.log(JSON.stringify(data));
+    resetAll();
+  }
+
+  const resetAll = () => {
     reset();
+    (document.querySelector('textarea') as HTMLTextAreaElement).value = '';
   }
 
   return (
@@ -45,25 +73,89 @@ export default function App() {
         onSubmit={handleSubmit(onSubmit)}
       >
         <h1>Форма бронирования переговорной </h1>
-
-        <Select
-          className='Form__select'
-          placeholder='Выберете башню'
-          defaultValue={selectedOption}
-          onChange={() => setSelectedOption}
-          options={options}
+        
+        <Controller
+          control={control}
+          name='currentTower'
+          rules={
+            {
+              required: "Выберете башню"
+            }
+          }
+          render={({field: {onChange, value}}) =>
+            <Select
+              className='Form__select'
+              placeholder='Выберете башню'
+              onChange={newValue => onChange(newValue)}
+              value={getValue(value, towers)}
+              options={towers}
+            />
+          }
         />
 
-        <div>
+        <Controller
+          control={control}
+          name='currentLevel'
+          rules={
+            {
+              required: "Выберете этаж"
+            }
+          }
+          render={({field: {onChange, value}}) =>
+            <Select
+              className='Form__select'
+              placeholder='Выберете этаж'
+              onChange={newValue => onChange(newValue)}
+              value={getValue(value, levels)}
+              options={levels}
+            />
+          }
+        />
+
+        <Controller
+          control={control}
+          name='currentRoom'
+          rules={
+            {
+              required: "Выберете переговорную"
+            }
+          }
+          render={({field: {onChange, value}}) =>
+            <Select
+              className='Form__select'
+              placeholder='Выберете переговорную'
+              onChange={newValue => onChange(newValue)}
+              value={getValue(value, rooms)}
+              options={rooms}
+            />
+          }
+        />
+
+        <Controller
+          control={control}
+          name='comments'
+          render={({field: {onChange, value}}) =>
+              <textarea
+                placeholder='Комментарий...'
+                className='Form__textarea'
+                onChange={newValue => onChange(newValue)}
+                value={value}
+              ></textarea>
+            }
+        />
+
+        <div className='Form__btn-wrapper'>
           <button
-            type="submit"
+            className='Form__btn-submit'
+            type='submit'
             disabled={!isValid && true}
           >
             Отправить
           </button>
           <button
+            className='Form__btn-reset'
             type='button'
-            onClick={() => reset()}>Очистить форму</button>
+            onClick={() => resetAll()}>Очистить</button>
         </div>
       </form>
     </div>
