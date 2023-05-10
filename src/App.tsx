@@ -58,7 +58,6 @@ type FormValues = {
   currentRoom: string,
   date: string,
   comments: string,
-  value: string,
 };
 
 export default function App() {
@@ -73,14 +72,13 @@ export default function App() {
     return value ? options.find(option => option.value === value) : '';
   };
 
+  // Находим минимальную дату когда можно бронировать
   const getMinDate = () => {
     return new Date().toISOString().slice(0,new Date().toISOString().lastIndexOf(":"));
   }
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data); 
-    
-    // console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data));
     resetAll();
   }
 
@@ -163,6 +161,11 @@ export default function App() {
         <Controller
           control={control}
           name='date'
+          rules={
+            {
+              required: "Выберете дату"
+            }
+          }
           render={({field: {onChange, value}}) =>
             <input
               className='Form__input-date'
