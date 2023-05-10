@@ -74,24 +74,37 @@ export default function App() {
 
   // Находим минимальную дату когда можно бронировать
   const getMinDate = () => {
-    return new Date().toISOString().slice(0,new Date().toISOString().lastIndexOf(":"));
-  }
+    return new Date().toISOString()
+                     .slice(0,new Date()
+                     .toISOString()
+                     .lastIndexOf(":"));
+  };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(JSON.stringify(data));
+    const res = {
+      tower: Object.values(data.currentTower)[0],
+      level: Object.values(data.currentLevel)[0],
+      room: Object.values(data.currentRoom)[0],
+      date: data.date.slice(0, 10).split('-').reverse().join('.'),
+      time: data.date.slice(11),
+      comments: data.comments ?? '',
+    };
+    
+    console.log(JSON.stringify(res));
     resetAll();
-  }
+  };
 
   const resetAll = () => {
     reset();
+
     (
       document.querySelector("input[type='datetime-local']"
-    ) as HTMLTextAreaElement).value = '';
+    ) as HTMLInputElement).value = '';
 
     (
       document.querySelector('textarea'
     ) as HTMLTextAreaElement).value = '';
-  }
+  };
 
   return (
     <div className='App'>
