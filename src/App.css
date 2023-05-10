@@ -37,10 +37,11 @@ body {
   resize: none;
 }
 
-.Form__text-error {
-  position: absolute;
-  bottom: -15px;
-  color: red;
+.Form__input-date {
+  width: 35%;
+  margin-bottom: 20px;
+  padding: 10px;
+  line-height: 22px;
 }
 
 .Form__btn-wrapper {
@@ -84,7 +85,21 @@ body {
   }
 
   .Form__select,
-  .Form__textarea {
+  .Form__textarea,
+  .Form__input-date {
     width: 60%;
+  }
+
+  .Form__btn-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+  }
+
+  .Form__btn-submit,
+  .Form__btn-reset {
+    width: 100%;
+    margin-bottom: 25px;
   }
 }

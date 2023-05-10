@@ -1,18 +1,32 @@
 import './App.css';
 import Select from 'react-select';
-import { useForm, SubmitHandler, Controller  } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  Controller
+} from "react-hook-form";
 
 // Башни А и Б
 const towers = [
-  { value: 'Башня А', label: 'Башня А' },
-  { value: 'Башня Б', label: 'Башня Б' },
+  {
+    value: 'Башня А',
+    label: 'Башня А'
+  },
+  {
+    value: 'Башня Б',
+    label: 'Башня Б'
+  },
 ];
 
 // Получаем массив этажей с 3 по 27
 const firstLevel = 3;
 const lastLevel = 28;
 
-const levels = Array.from(Array(lastLevel).keys()).slice(firstLevel).map(level => {
+const levels = Array.from(
+  Array(lastLevel).keys()
+)
+.slice(firstLevel)
+.map(level => {
   return {
     value: level.toString(),
     label: level.toString()
@@ -23,7 +37,11 @@ const levels = Array.from(Array(lastLevel).keys()).slice(firstLevel).map(level =
 const firstRoom = 1;
 const lastRoom = 11;
 
-const rooms = Array.from(Array(lastRoom).keys()).slice(firstRoom).map(level => {
+const rooms = Array.from(
+  Array(lastRoom).keys()
+)
+.slice(firstRoom)
+.map(level => {
   return {
     value: level.toString(),
     label: level.toString()
@@ -38,6 +56,7 @@ type FormValues = {
   currentTower: string,
   currentLevel: string,
   currentRoom: string,
+  date: string,
   comments: string,
   value: string,
 };
@@ -54,6 +73,10 @@ export default function App() {
     return value ? options.find(option => option.value === value) : '';
   };
 
+  const getMinDate = () => {
+    return new Date().toISOString().slice(0,new Date().toISOString().lastIndexOf(":"));
+  }
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data); 
     
@@ -63,7 +86,13 @@ export default function App() {
 
   const resetAll = () => {
     reset();
-    (document.querySelector('textarea') as HTMLTextAreaElement).value = '';
+    (
+      document.querySelector("input[type='datetime-local']"
+    ) as HTMLTextAreaElement).value = '';
+
+    (
+      document.querySelector('textarea'
+    ) as HTMLTextAreaElement).value = '';
   }
 
   return (
@@ -133,15 +162,29 @@ export default function App() {
 
         <Controller
           control={control}
+          name='date'
+          render={({field: {onChange, value}}) =>
+            <input
+              className='Form__input-date'
+              type='datetime-local'
+              onChange={newValue => onChange(newValue)}
+              value={value}
+              min={getMinDate()}
+            />
+          }
+        />
+
+        <Controller
+          control={control}
           name='comments'
           render={({field: {onChange, value}}) =>
-              <textarea
-                placeholder='Комментарий...'
-                className='Form__textarea'
-                onChange={newValue => onChange(newValue)}
-                value={value}
-              ></textarea>
-            }
+            <textarea
+              placeholder='Комментарий...'
+              className='Form__textarea'
+              onChange={newValue => onChange(newValue)}
+              value={value}
+            ></textarea>
+          }
         />
 
         <div className='Form__btn-wrapper'>
@@ -155,7 +198,10 @@ export default function App() {
           <button
             className='Form__btn-reset'
             type='button'
-            onClick={() => resetAll()}>Очистить</button>
+            onClick={() => resetAll()}
+          >
+            Очистить
+          </button>
         </div>
       </form>
     </div>
